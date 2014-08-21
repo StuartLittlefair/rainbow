@@ -37,10 +37,13 @@ USAGE
 -----
 
 The installation will put two utility scripts in your path. The main script
-'transitModel.py' takes no arguments by default.  
+'transitModel.py' takes no arguments by default.  Running transitModel.py
+is the recommended way of using this module. You should be able to fit
+any arbitrary multi-colour dataset using this script, without delving into 
+more advanced usage patterns.
 
 Operation of this script is controlled by a file named "input.dat". This
-should be self-documenting. The example_data directory contains some
+should be self-documenting! The example_data directory contains some
 data and an input.dat file to get you going.
 
 Upon completion, the script shows a plot of the model and the data. The 
