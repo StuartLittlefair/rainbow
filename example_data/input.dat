@@ -1,10 +1,10 @@
 # MCMC run parameters
-nburn    = 200 # number of steps to use in burn-in phase
-nprod    = 200 # number of steps to use in production phase
-nwalkers = 108   # must be even multiple of npars (npars = 3 + 6*ncolours)
-nthread  = 4   # number of CPU threads to use
+nburn    = 400 # number of steps to use in burn-in phase
+nprod    = 400 # number of steps to use in production phase
+nwalkers = 150   # must be even multiple of npars (npars = 4 + 7*ncolours)
+nthread  = 1   # number of CPU threads to use
 scatter  = 0.05 # fractional scatter to add to starting ball of parameters
-fit      = 0 # actually fit (1), or just plot model as specified (0)
+fit      = 1 # actually fit (1), or just plot model as specified (0)
 
 # Gaussian Process setup
 # First we choose a Kernel function. Kernel types can be one of:

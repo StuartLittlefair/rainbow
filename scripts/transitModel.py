@@ -80,10 +80,9 @@ def lnprob(pars,model,x,y,e):
     return model.lnprob(x,y,e)
 
 if toFit:
-    p0 = np.array([params for i in xrange(nwalkers)])
+    p0 = np.array(params)
     # scatter values around starting guess
-    p0 = scatterWalkers(p0,scatter)
-
+    p0 = emcee.utils.sample_ball(p0,scatter*p0,size=nwalkers)
     sampler = emcee.EnsembleSampler(nwalkers,npars,lnprob,args=[model,x,y,e],threads=nthread)
  
     #burn-in
