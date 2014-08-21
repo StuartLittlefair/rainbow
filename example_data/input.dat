@@ -1,0 +1,52 @@
+# MCMC run parameters
+nburn    = 200 # number of steps to use in burn-in phase
+nprod    = 200 # number of steps to use in production phase
+nwalkers = 108   # must be even multiple of npars (npars = 3 + 6*ncolours)
+nthread  = 4   # number of CPU threads to use
+scatter  = 0.05 # fractional scatter to add to starting ball of parameters
+fit      = 0 # actually fit (1), or just plot model as specified (0)
+
+# colour independent parameters (not fit by model)
+hjdOff = 54835.0 # offset to apply to all dates for computational accuracy
+per    = 1.091423 # orbital period
+
+# colour independent parameters (fit by model)
+# all model parameters have both a starting value and a prior
+# priors are specified by type, val1, val2
+# type can be one of 'gauss', 'uniform' or 'log_uniform'
+# if type = 'gauss', val1 and val2 represent mean and standard deviation of prior
+# if type = 'uniform' or 'log_uniform', val1 and val2 represent the limits of prior
+
+t0     = 0.904 uniform -1.0 1.0  # time of mid-transit (after subtracting hjdOff above)
+b      = 0.396 uniform 0.0 1.0   # impact parameter, b
+rs_a   = 0.337 uniform 0.0 1.0  # size of star, as ratio of planet-star separation
+
+# remaining parameters are colour dependent, one for each colour to be fit
+ncolours = 3
+
+# the following lines should have an entry for each colour
+file_1  = wasp12_r.dat  # file containing data to fit. 3 columns - MJD, flux, err
+rp_rs_1 = 0.119 uniform 0.0 1.0  # radius of planet, relative to stellar radius
+f0_1    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
+u1_1    = 0.3141 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 
+u2_1    = 0.325 uniform 0.0 1.0 # second limb darkening parameter
+A_1     = -0.0013 uniform -10.0 10.0 # first parameter of airmass correction
+B_1     = 0.001725 uniform -10.0 10.0 # second parameter of airmass correction
+
+# the following lines should have an entry for each colour
+file_2  = wasp12_g.dat  # file containing data to fit. 3 columns - MJD, flux, err
+rp_rs_2 = 0.120 uniform 0.0 1.0  # radius of planet, relative to stellar radius
+f0_2    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
+u1_2    = 0.4647 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 
+u2_2    = 0.494 uniform 0.0 1.0 # second limb darkening parameter
+A_2     = -0.0017 uniform -10.0 10.0 # first parameter of airmass correction
+B_2     = 0.002335 uniform -10.0 10.0 # second parameter of airmass correction
+
+# the following lines should have an entry for each colour
+file_3  = wasp12_u.dat  # file containing data to fit. 3 columns - MJD, flux, err
+rp_rs_3 = 0.117 uniform 0.0 1.0  # radius of planet, relative to stellar radius
+f0_3    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
+u1_3    = 0.5615 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 
+u2_3    = 0.408 uniform 0.0 1.0 # second limb darkening parameter
+A_3     = 0.0042 uniform -10.0 10.0 # first parameter of airmass correction
+B_3     = -0.0025 uniform -10.0 10.0 # second parameter of airmass correction
