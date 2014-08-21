@@ -23,10 +23,9 @@ case you will need the following additional dependencies:
          Foreman-Mackey's excellent emcee package -
          http://dan.iel.fm/emcee/current. 
 
- george : Red noise is modelled using Gaussian
-          Processes, again using Dan's package george -
-          http://dan.iel.fm/george/current/. (Note: this is currently in 
-          development).
+ george : Red noise is modelled using Gaussian Processes, again using Dan's package george -
+          http://dan.iel.fm/george/current/. I recommend using the version installed via 
+          'pip install george'. 
 
 Installation proceeds via the usual::
 
