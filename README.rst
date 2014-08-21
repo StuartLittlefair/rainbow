@@ -47,6 +47,12 @@ Operation of this script is controlled by a file named "input.dat". This
 should be self-documenting. The example_data directory contains some
 data and an input.dat file to get you going.
 
+Upon completion, the script shows a plot of the model and the data. The 
+upper panel displays the model fit and the data *with the GP noise model
+subtracted*. The bottom panel shows the residuals between the model and
+the *raw data*. Over-plotted on the bottom panel is the 1-sigma range of noise
+models arising from the Gaussian process.
+
 Limb-darkening is handled using a quadratic limb-darkening law. The
 utility script limbdark.py will help you find initial values for SDSS
 filters, using the tables from Claret & Bloemen (2011).
@@ -97,7 +103,7 @@ additional bands can be added to the model with the 'addBand' member::
  model.addBand(rp_rs, f0, u1, u2, A, B)
 
 obviously we do not need to specify the stellar radius, impact parameter or mid-transit
-time again, since these are shared between bands.
+time again, since these are shared between bands. This model does not include and GP noise.
 
 Data from multiple bands should be stored in python lists, as follows::
 
@@ -140,5 +146,9 @@ Finally, the model (and the airmass term) can be calculated at a range of x posi
  band = 0 # calculate first colour
  y = model.calc(band,x)
  y_am = model.calc_airmass_term(band,x)
+ 
+If you want to do your own fitting, but want a model which includes Gaussian Process noise, 
+use the TransitModelGP class. Examples of use can be seen in the transitModel.py fitting 
+script.
  
  

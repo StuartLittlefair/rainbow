@@ -54,7 +54,7 @@ for col in range(1,1+ncolours):
     rn_amp.append( parseParam( input_dict['rn_amp_%d' % col] ) )
 
 # create a transit model from the first band's parameters
-model = TransitModel(per,t0,b,rs_a,kernel,tau,rp[0],f0[0],u1[0],u2[0],A[0],B[0],rn_amp[0])
+model = TransitModelGP(per,t0,b,rs_a,kernel,tau,rp[0],f0[0],u1[0],u2[0],A[0],B[0],rn_amp[0])
 
 # then add additional colours with the models addBand function
 for col in range(1,ncolours):
@@ -144,7 +144,7 @@ for icol in range(ncolours):
 
     fy = model.calc(icol,xp)
     am = model.calc_airmass_term(icol,xp)
-    samples = model.sample_conditional_gp(icol,xp,yp,ep)
+    samples = model.sample_conditional(icol,xp,yp,ep)
     mu = np.mean(samples,axis=0)
     std = np.std(samples,axis=0)
         
