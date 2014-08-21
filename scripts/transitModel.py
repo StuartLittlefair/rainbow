@@ -32,6 +32,8 @@ per      = float( input_dict['per'] )
 t0 = parseParam(input_dict['t0'])
 b = parseParam(input_dict['b'])
 rs_a = parseParam(input_dict['rs_a'])
+kernel = input_dict['kernel']
+tau = parseParam(input_dict['tau'])
 
 files = []
 rp    = []
@@ -40,6 +42,7 @@ u1    = []
 u2    = []
 A     = []
 B     = []
+rn_amp = []
 for col in range(1,1+ncolours):
     files.append( input_dict['file_%d' % col] )
     rp.append( parseParam( input_dict['rp_rs_%d' % col] ) )
@@ -48,13 +51,14 @@ for col in range(1,1+ncolours):
     u2.append( parseParam( input_dict['u2_%d' % col] ) )
     A.append(  parseParam( input_dict['A_%d' % col] ) )
     B.append(  parseParam( input_dict['B_%d' % col] ) )
+    rn_amp.append( parseParam( input_dict['rn_amp_%d' % col] ) )
 
 # create a transit model from the first band's parameters
-model = TransitModel(per,t0,b,rs_a,rp[0],f0[0],u1[0],u2[0],A[0],B[0])
+model = TransitModel(per,t0,b,rs_a,kernel,tau,rp[0],f0[0],u1[0],u2[0],A[0],B[0],rn_amp[0])
 
 # then add additional colours with the models addBand function
 for col in range(1,ncolours):
-    model.addBand(rp[col],f0[col],u1[col],u2[col],A[col],B[col])
+    model.addBand(rp[col],f0[col],u1[col],u2[col],A[col],B[col],rn_amp[col])
 
 # store your data in python lists, so that x[0] are the times for colour 0, etc.
 x = []
@@ -98,7 +102,8 @@ if toFit:
             'Fs %d' % (icol+1), \
             'u2 %d' % (icol+1), \
             'A %d' % (icol+1), \
-            'B %d' % (icol+1)] )
+            'B %d' % (icol+1), \
+            'rn %d' % (icol+1)] )
     thumbPlot(chain,nameList)
 
     params = []
@@ -139,7 +144,10 @@ for icol in range(ncolours):
 
     fy = model.calc(icol,xp)
     am = model.calc_airmass_term(icol,xp)
-    
+    samples = model.sample_conditional_gp(icol,xp,yp,ep)
+    mu = np.mean(samples,axis=0)
+    std = np.std(samples,axis=0)
+        
     # remove airmass term from plots
     #fy /= am
     #yp /= am
@@ -152,7 +160,7 @@ for icol in range(ncolours):
     
     ax1 = plt.subplot(gs[0,icol])	
         
-    ax1.errorbar(xp,yp/ynorm,yerr=ep/ynorm,color=plotColours[icol],fmt='.')
+    ax1.errorbar(xp,(yp-mu)/ynorm,yerr=ep/ynorm,color=plotColours[icol],fmt='.')
     ax1.plot(xp,fy/ynorm,'k-',linewidth=3.)
     ax1.set_xticks([])
     
@@ -161,7 +169,8 @@ for icol in range(ncolours):
     maxY = max(hi,maxY)
         
     ax2 = plt.subplot(gs[1,icol],sharex=ax1)		
-    ax2.errorbar(xp,(yp-fy)/ynorm,yerr=ep/ynorm,color=plotColours[icol],fmt='.')
+    ax2.errorbar(xp,(yp-fy)/ynorm,yerr=ep/ynorm,color=plotColours[icol],fmt='.',alpha=0.7)
+    ax2.fill_between(xp,mu+std,mu-std,color='k',alpha=0.7)
     ax2.set_xlim(ax1.get_xlim())
 
     #labels

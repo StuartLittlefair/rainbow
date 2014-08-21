@@ -6,6 +6,16 @@ nthread  = 4   # number of CPU threads to use
 scatter  = 0.05 # fractional scatter to add to starting ball of parameters
 fit      = 0 # actually fit (1), or just plot model as specified (0)
 
+# Gaussian Process setup
+# First we choose a Kernel function. Kernel types can be one of:
+# ExpSquaredKernel, ExpKernel, Matern32Kernel, Matern52Kernel
+# These are all suitable for modelling red noise. For the various pros and cons
+# of each Kernel function, see Rassmussen & Williams (2006)
+kernel   = ExpSquaredKernel
+# we assume here that the red noise for each colour shares the same
+# time constant. This is specified in days 
+tau      =  0.01 uniform 0.001 0.1
+
 # colour independent parameters (not fit by model)
 hjdOff = 54835.0 # offset to apply to all dates for computational accuracy
 per    = 1.091423 # orbital period
@@ -32,6 +42,7 @@ u1_1    = 0.3141 uniform 0.0 1.0  # first limb darkening parameter, not fit by m
 u2_1    = 0.325 uniform 0.0 1.0 # second limb darkening parameter
 A_1     = -0.0013 uniform -10.0 10.0 # first parameter of airmass correction
 B_1     = 0.001725 uniform -10.0 10.0 # second parameter of airmass correction
+rn_amp_1 = 0.01 log_uniform 0.00001 0.3 # amplitude of Gaussian noise term
 
 # the following lines should have an entry for each colour
 file_2  = wasp12_g.dat  # file containing data to fit. 3 columns - MJD, flux, err
@@ -41,6 +52,7 @@ u1_2    = 0.4647 uniform 0.0 1.0  # first limb darkening parameter, not fit by m
 u2_2    = 0.494 uniform 0.0 1.0 # second limb darkening parameter
 A_2     = -0.0017 uniform -10.0 10.0 # first parameter of airmass correction
 B_2     = 0.002335 uniform -10.0 10.0 # second parameter of airmass correction
+rn_amp_2 = 0.01 log_uniform 0.00001 0.3 # amplitude of Gaussian noise term
 
 # the following lines should have an entry for each colour
 file_3  = wasp12_u.dat  # file containing data to fit. 3 columns - MJD, flux, err
@@ -50,3 +62,4 @@ u1_3    = 0.5615 uniform 0.0 1.0  # first limb darkening parameter, not fit by m
 u2_3    = 0.408 uniform 0.0 1.0 # second limb darkening parameter
 A_3     = 0.0042 uniform -10.0 10.0 # first parameter of airmass correction
 B_3     = -0.0025 uniform -10.0 10.0 # second parameter of airmass correction
+rn_amp_3 = 0.01 log_uniform 0.00001 0.3 # amplitude of Gaussian noise term
