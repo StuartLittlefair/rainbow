@@ -41,9 +41,9 @@ if you are not.
 USAGE
 -----
 
+The installation will put two 
 
-
-Operation of the code is controlled by a file named "input.dat". This
+Operation of this script is controlled by a file named "input.dat". This
 should be self-documenting. The example_data directory contains some
 data to get you going.
 
