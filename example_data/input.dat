@@ -26,7 +26,6 @@ per    = 1.091423 # orbital period
 # type can be one of 'gauss', 'uniform' or 'log_uniform'
 # if type = 'gauss', val1 and val2 represent mean and standard deviation of prior
 # if type = 'uniform' or 'log_uniform', val1 and val2 represent the limits of prior
-
 t0     = 0.904 uniform -1.0 1.0  # time of mid-transit (after subtracting hjdOff above)
 b      = 0.396 uniform 0.0 1.0   # impact parameter, b
 rs_a   = 0.337 uniform 0.0 1.0  # size of star, as ratio of planet-star separation

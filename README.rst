@@ -19,13 +19,9 @@ This is all you need to use the 'rainbow' module to calculate your own models (s
 recommended way of using this module is to run the 'transitModel.py' script. In this
 case you will need the following additional dependencies:
 
- emcee : Models are fit to data files using MCMC, implemented using Dan
-         Foreman-Mackey's excellent emcee package -
-         http://dan.iel.fm/emcee/current. 
+ emcee : Models are fit to data files using MCMC, implemented using Dan Foreman-Mackey's excellent emcee package - http://dan.iel.fm/emcee/current. 
 
- george : Red noise is modelled using Gaussian Processes, again using Dan's package george -
-          http://dan.iel.fm/george/current/. I recommend using the version installed via 
-          'pip install george'. 
+ george : Red noise is modelled using Gaussian Processes, again using Dan's package george - http://dan.iel.fm/george/current/. I recommend using the version installed via 'pip install george'. 
 
 Installation proceeds via the usual::
 
