@@ -53,7 +53,77 @@ class TransitModel(MutableSequence):
                         self.u2[-1], \
                         self.A[-1], \
                         self.B[-1] ])
-                        
+        
+        def calc(self,band,x):
+            # pars are: 
+            # [t0, b, rs_a, rp_rs, f0, u2, A, B]
+            #
+            # we also have u1 for the limb darkening law, which is fixed
+            # split into params for transit model (in each band): 
+            # [t0, b, rs_a, rp_rs, f0, u1, u2] 
+            # and params for 2nd order polynomial
+            # [A,B]
+            transitPars = [ \
+                self.t0.currVal, \
+                self.b.currVal, \
+                self.rs_a.currVal, \
+                self.rp_rs[band].currVal, \
+                self.f0[band].currVal, \
+                self.u1[band].currVal, \
+                self.u2[band].currVal]
+            a,b = ( self.A[band].currVal, self.B[band].currVal )
+            transitShape = transit.modeltransit(transitPars,fitFunc,self.period,x)
+
+            # t is x rescaled so that it runs from -1 to 1
+            t = -1.0 + 2.0*(x - x.min())/(x.max()-x.min())
+            airmassFunc =  1.0 + a*t + b*t*t
+            return transitShape*airmassFunc
+    
+        def chisq(self,x,y,yerr):
+            retVal = 0.0
+            for icol in range(self.ncolours):
+                resids = ( y[icol] - self.calc(icol,x[icol]) ) / yerr[icol]
+                retVal += np.sum(resids*resids) 
+            return retVal
+        
+        def reducedChisq(self,x,y,yerr):
+            return self.chisq(x,y,yerr) / (np.size(x) - self.npars - 1)
+
+        def ln_prior(self):
+            retVal = 0.0
+            prior_pars_shared = ['t0','b','rs_a']
+            prior_pars_unique = ['rp_rs','f0','u1','u2','A','B']
+            ncol = self.ncolours
+            for par in prior_pars_shared:
+                param = getattr(self,par)
+                retVal += param.prior.ln_prob(param.currVal)
+            for par in prior_pars_unique:
+                parArr = getattr(self,par)         
+                for icol in range(ncol):
+                    param = parArr[icol]
+                    retVal += param.prior.ln_prob(param.currVal)
+            return retVal
+
+        def ln_likelihood(self,x,y,yerr):
+            errFac = 0.0
+            for icol in range(self.ncolours):
+                errFac += np.sum( np.log (2.0*np.pi*yerr[icol]**2) )
+            return -0.5*(errFac + self.chisq(x,y,yerr))
+                
+        def lnprob(self,x,y,e):
+            lnp = self.ln_prior()
+            if np.isfinite(lnp):
+                return lnp + self.ln_likelihood(x,y,e)
+            else:
+                return lnp
+
+        def calc_airmass_term(self,band,x):
+            a,b = ( self.A[band].currVal, self.B[band].currVal )
+            # t is x rescaled so that it runs from -1 to 1
+            t = -1.0 + 2.0*(x - x.min())/(x.max()-x.min())
+            airmassFunc =  1.0 + a*t + b*t*t
+            return airmassFunc 
+
         def __getitem__(self,ind):
                 return self.data[ind].currVal
         def __setitem__(self,ind,val):
@@ -84,98 +154,12 @@ def parseParam(parString):
         priorP2   = float(fields[3])
         return Param(val, Prior(priorType, priorP1, priorP2))
                 
-def calc_model(thisModel,band,x):
-        # pars are: 
-        # [t0, b, rs_a, rp_rs, f0, u2, A, B]
-        #
-        # we also have u1 for the limb darkening law, which is fixed
-        # split into params for transit model (in each band): 
-        # [t0, b, rs_a, rp_rs, f0, u1, u2] 
-        # and params for 2nd order polynomial
-        # [A,B]
-        transitPars = [ \
-                thisModel.t0.currVal, \
-                thisModel.b.currVal, \
-                thisModel.rs_a.currVal, \
-                thisModel.rp_rs[band].currVal, \
-                thisModel.f0[band].currVal, \
-                thisModel.u1[band].currVal, \
-                thisModel.u2[band].currVal]
-        #print transitPars
-        a,b = ( thisModel.A[band].currVal, thisModel.B[band].currVal )
-        transitShape = transit.modeltransit(transitPars,fitFunc,thisModel.period,x)
-        
-        # t is x rescaled so that it runs from -1 to 1
-        t = -1.0 + 2.0*(x - x.min())/(x.max()-x.min())
-        airmassFunc =  1.0 + a*t + b*t*t
-        return transitShape*airmassFunc
 
-def calc_airmass_model(thisModel,band,x):
-        # pars are: 
-        # [t0, b, rs_a, rp_rs, f0, u2, A, B]
-        #
-        # we also have u1 for the limb darkening law, which is fixed
-        # split into params for transit model (in each band): 
-        # [t0, b, rs_a, rp_rs, f0, u1, u2] 
-        # and params for 2nd order polynomial
-        # [A,B]
-        transitPars = [ \
-                thisModel.t0.currVal, \
-                thisModel.b.currVal, \
-                thisModel.rs_a.currVal, \
-                thisModel.rp_rs[band].currVal, \
-                thisModel.f0[band].currVal, \
-                thisModel.u1[band].currVal, \
-                thisModel.u2[band].currVal]
-        #print transitPars
-        a,b = ( thisModel.A[band].currVal, thisModel.B[band].currVal )
+      
 
-        # t is x rescaled so that it runs from -1 to 1
-        t = -1.0 + 2.0*(x - x.min())/(x.max()-x.min())
-        airmassFunc =  1.0 + a*t + b*t*t
-        return airmassFunc
-        
-def chisq(thisModel,x,y,yerr):
-        retVal = 0.0
-        for icol in range(thisModel.ncolours):
-                resids = ( y[icol] - calc_model(thisModel,icol,x[icol]) ) / yerr[icol]
-                retVal += np.sum(resids*resids) 
-        return retVal
-        
-def reducedChisq(thisModel,x,y,yerr):
-        return chisq(thisModel,x,y,yerr) / (np.size(x) - thisModel.npars - 1)
 
-def ln_prior(thisModel):
-        retVal = 0.0
-        prior_pars_shared = ['t0','b','rs_a']
-        prior_pars_unique = ['rp_rs','f0','u1','u2','A','B']
-        ncol = thisModel.ncolours
-        for par in prior_pars_shared:
-                param = getattr(thisModel,par)
-                retVal += param.prior.ln_prob(param.currVal)
-        for par in prior_pars_unique:
-                parArr = getattr(thisModel,par)         
-                for icol in range(ncol):
-                        param = parArr[icol]
-                        retVal += param.prior.ln_prob(param.currVal)
-        return retVal
+                     
 
-def ln_likelihood(thisModel,x,y,yerr):
-        errFac = 0.0
-        for icol in range(thisModel.ncolours):
-                errFac += np.sum( np.log (2.0*np.pi*yerr[icol]**2) )
-        return -0.5*(errFac + chisq(thisModel,x,y,yerr))
-                
-def lnprob(pars,thisModel,x,y,e):
-        # ln_likelihood = -chisq/2
-        # ln_posterior = ln_likelihood + ln_prior
+
         
-        # we need to update the model we're using to use pars as submitted by MCMC
-        for i in range(thisModel.npars):
-                thisModel[i]=pars[i]
-        lnp = ln_prior(thisModel)
-        if np.isfinite(lnp):
-                return lnp + ln_likelihood(thisModel,x,y,e)
-        else:
-                return lnp
 

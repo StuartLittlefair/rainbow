@@ -69,6 +69,12 @@ for file in files:
 npars= model.npars
 params = [par for par in model]
 
+def lnprob(pars,model,x,y,e):
+    # we need to update the model we're using to use pars as submitted by MCMC
+    for i in range(model.npars):
+        model[i] = pars[i]
+    return model.lnprob(x,y,e)
+
 if toFit:
     p0 = np.array([params for i in xrange(nwalkers)])
     # scatter values around starting guess
@@ -103,11 +109,15 @@ if toFit:
         model[i] = best
         params.append(best)
 
+#update model with best fit
+for i, par in enumerate(params):
+    model[i] = par
+    
 print 'For this model:'
-print "Reduced chisq  =  %.2f (%d D.O.F)" % (reducedChisq(model,x,y,e),np.size(x) - model.npars - 1)
-print "Chisq          = %.2f" % chisq(model,x,y,e)
-print "ln probability = %.2f" % lnprob(params,model,x,y,e)
-print "ln prior       = %.2f" % ln_prior(model)
+print "Reduced chisq  =  %.2f (%d D.O.F)" % (model.reducedChisq(x,y,e),np.size(x) - model.npars - 1)
+print "Chisq          = %.2f" % model.chisq(x,y,e)
+print "ln probability = %.2f" % model.lnprob(x,y,e)
+print "ln prior       = %.2f" % model.ln_prior()
 plotColours = ['r','g','b']
 gs = gridspec.GridSpec(2,ncolours,height_ratios=[2,1])
 gs.update(hspace=0.0)
@@ -127,8 +137,8 @@ for icol in range(ncolours):
         yp = y[icol].copy()
         ep = e[icol].copy()
 
-    fy = calc_model(model,icol,xp)
-    am = calc_airmass_model(model,icol,xp)
+    fy = model.calc(icol,xp)
+    am = model.calc_airmass_term(icol,xp)
     
     # remove airmass term from plots
     #fy /= am
