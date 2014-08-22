@@ -59,6 +59,11 @@ import pdb
 
 eps = np.finfo(float).eps
 
+import warnings
+# occultquad and ellke raise runtime warnings which do not seem to affect their accuracy
+# suppress them here
+warnings.simplefilter("ignore", RuntimeWarning)
+
 def appellf1(a,b1,b2,c,z1,z2,**kwargs):
     """Give the Appell hypergeometric function of two variables.
 
@@ -1052,13 +1057,12 @@ def modeltransit(params, func, per, t):
 
     #pdb.set_trace()
     
-    if len(params)>5:
-        model = params[4] * func(z, params[3], params[5::])
+#     if len(params)>5:
+#         model1 = params[4] * func(z, params[3], params[5::])
     try:  # Limb-darkened
         model = params[4] * func(z, params[3], params[5::])
     except:  # Uniform-disk
         model = params[4] * (1. - func(z, params[3]))
-
     return model
 
 def modeleclipse(params, func, per, t):
