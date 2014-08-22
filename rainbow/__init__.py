@@ -1,3 +1,6 @@
+'''
+classes and helper functions to handle simultaneously fitting multi-coloured
+observations of exoplanet transits, with red noise being treated as a GP'''
 import transit
 from utils.mcmc_utils import Param, Prior
 import numpy as np
