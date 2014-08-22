@@ -192,7 +192,6 @@ class TransitModel(MutableSequence):
                 self.u2 = [u2]
                 self.A  = [A]
                 self.B  = [B]
-                self.rn_amp = [rn_amp]
                 self.ncolours = 1
                 # initialise list with all variable parameters
                 self.data = [self.t0, \
