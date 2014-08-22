@@ -11,11 +11,11 @@ fit      = 1 # actually fit (1), or just plot model as specified (0)
 # ExpSquaredKernel, ExpKernel, Matern32Kernel, Matern52Kernel
 # These are all suitable for modelling red noise. For the various pros and cons
 # of each Kernel function, see Rassmussen & Williams (2006)
-kernel   = ExpSquaredKernel
+kernel   = Matern32Kernel
 
 # we assume here that the red noise for each colour shares the same
 # time constant. This is specified in days 
-tau      =  0.01 uniform 0.001 0.1
+tau      =  0.01 uniform 0.0001 0.1
 
 # colour independent parameters (not fit by model)
 hjdOff = 54835.0 # offset to apply to all dates for computational accuracy

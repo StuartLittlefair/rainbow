@@ -104,8 +104,10 @@ if toFit:
             'A %d' % (icol+1), \
             'B %d' % (icol+1), \
             'rn %d' % (icol+1)] )
-    thumbPlot(chain,nameList)
-
+    fig = thumbPlot(chain,nameList)
+    fig.savefig('cornerPlot.pdf')
+    plt.close()
+    
     params = []
     for i in range(npars):
         par = chain[:,i]
