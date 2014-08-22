@@ -4,7 +4,7 @@ README
 A python code for fitting multi-color observations of planetary
 transits. As well as providing a python module, I provide a flexible
 and powerful python script for fitting multi-color transit data with
-MCMC.
+MCMC. Using multiple threads is supported for speed.
 
 'rainbow' uses Ian Crossfield's Python implementation of the Mandel & Algol transit
 model, which is included for convenience
@@ -55,6 +55,11 @@ models arising from the Gaussian process.
 Limb-darkening is handled using a quadratic limb-darkening law. The
 utility script limbdark.py will help you find initial values for SDSS
 filters, using the tables from Claret & Bloemen (2011).
+
+KNOWN_ISSUES
+-------------
+
+Currently one cannot fit data with GP red noise and use multiple threads.
 
 ADVANCED USAGE
 --------------
