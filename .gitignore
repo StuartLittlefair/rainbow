@@ -23,3 +23,6 @@ build
 dist
 rainbow.egg-info
 
+
+#example data
+example_data/chain.dat
