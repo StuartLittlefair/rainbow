@@ -2,7 +2,7 @@
 nburn    = 400 # number of steps to use in burn-in phase
 nprod    = 400 # number of steps to use in production phase
 nwalkers = 150   # must be even multiple of npars (npars = 4 + 7*ncolours)
-nthread  = 4   # number of CPU threads to use
+nthread  = 1   # number of CPU threads to use
 scatter  = 0.05 # fractional scatter to add to starting ball of parameters
 fit      = 1 # actually fit (1), or just plot model as specified (0)
 

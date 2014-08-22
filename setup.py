@@ -13,6 +13,6 @@ setup(name='rainbow',
         'numpy',
         'triangle_plot'
     ],
-    scripts = ['scripts/transitModel.py','scripts/limbdark.py']
+    scripts = ['scripts/transitModel.py','scripts/transitModel_noGP.py','scripts/limbdark.py']
     )
     
