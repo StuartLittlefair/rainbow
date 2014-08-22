@@ -81,10 +81,11 @@ def lnprob(pars,model,x,y,e):
 
 if toFit:
     p0 = np.array(params)
+ 
     # scatter values around starting guess
     p0 = emcee.utils.sample_ball(p0,scatter*p0,size=nwalkers)
     sampler = emcee.EnsembleSampler(nwalkers,npars,lnprob,args=[model,x,y,e],threads=nthread)
- 
+
     #burn-in
     print 'Running burn-in'
     pos, prob, state = run_burnin(sampler,p0,nburn)
@@ -95,7 +96,7 @@ if toFit:
     sampler = run_mcmc_save(sampler,pos,nprod,state,"chain.dat")
     chain   = flatchain(sampler.chain,npars,thin=1)
     
-    nameList = ['T0','b','Rs/a']
+    nameList = ['T0','b','Rs/a','tau']
     for icol in range(ncolours):
         nameList.extend( ['Rp/Rs %d' % (icol+1), \
             'Fs %d' % (icol+1), \
