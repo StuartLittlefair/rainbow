@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(name='rainbow',
     version='0',
-    packages = ['rainbow','rainbow.utils'],
+    packages = ['rainbow','rainbow.utils','rainbow.transit'],
     package_data = {'rainbow': ['data_files/*']},
     description = "Fit multi-colour transit data",
     author = "S. Littlefair",
