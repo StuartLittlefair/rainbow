@@ -187,4 +187,5 @@ for ax in plt.gcf().get_axes()[::2]:
     ax.set_ylim([minY,maxY])
     ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
 
-plt.show()
+plt.savefig('bestFit.pdf')
+plt.close()
