@@ -13,7 +13,8 @@ INSTALLATION
 ------------
 
 As well as "standard" Python dependencies (numpy, scipy, matplotlib), you will also need Dan's triangle package, for nice plots of posterior
-distributions. You can install this with "pip install triangle-plot".
+distributions. You can install this with "pip install triangle-plot". You may also need python-tk, if that is not
+installed by default.
 
 This is all you need to use the 'rainbow' module to calculate your own models (say if you want to write your own fitting code). The
 recommended way of using this module is to run the 'transitModel.py' script. In this
