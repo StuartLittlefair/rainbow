@@ -62,6 +62,9 @@ KNOWN_ISSUES
 
 Currently one cannot fit data with GP red noise and use multiple threads.
 
+The limb darkening data file cannot be read by the current version of pyfits, 
+meaning the limbdark.py script doesn't currently work.
+
 ADVANCED USAGE
 --------------
 
