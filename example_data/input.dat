@@ -1,10 +1,10 @@
 # MCMC run parameters
-nburn    = 400 # number of steps to use in burn-in phase
-nprod    = 400 # number of steps to use in production phase
+nburn    = 4000 # number of steps to use in burn-in phase
+nprod    = 4000 # number of steps to use in production phase
 nwalkers = 150   # must be even multiple of npars (npars = 4 + 7*ncolours)
 nthread  = 1   # number of CPU threads to use
 scatter  = 0.05 # fractional scatter to add to starting ball of parameters
-fit      = 1 # actually fit (1), or just plot model as specified (0)
+fit      = 0 # actually fit (1), or just plot model as specified (0)
 
 # Gaussian Process setup
 # First we choose a Kernel function. Kernel types can be one of:
@@ -36,6 +36,7 @@ ncolours = 3
 
 # the following lines should have an entry for each colour
 file_1  = wasp12_r.dat  # file containing data to fit. 3 columns - MJD, flux, err
+out_1   = wasp12_rfit.dat # file to write containing data and best fit
 rp_rs_1 = 0.119 uniform 0.0 1.0  # radius of planet, relative to stellar radius
 f0_1    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
 u1_1    = 0.3141 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 
@@ -46,6 +47,7 @@ rn_amp_1 = 0.001 log_uniform 0.00001 0.002 # amplitude of Gaussian noise term (a
 
 # the following lines should have an entry for each colour
 file_2  = wasp12_g.dat  # file containing data to fit. 3 columns - MJD, flux, err
+out_2   = wasp12_gfit.dat # file to write containing data and best fit
 rp_rs_2 = 0.120 uniform 0.0 1.0  # radius of planet, relative to stellar radius
 f0_2    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
 u1_2    = 0.4647 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 
@@ -56,6 +58,7 @@ rn_amp_2 = 0.001 log_uniform 0.00001 0.002 # amplitude of Gaussian noise term
 
 # the following lines should have an entry for each colour
 file_3  = wasp12_u.dat  # file containing data to fit. 3 columns - MJD, flux, err
+out_3   = wasp12_ufit.dat # file to write containing data and best fit
 rp_rs_3 = 0.117 uniform 0.0 1.0  # radius of planet, relative to stellar radius
 f0_3    = 1.0 log_uniform 0.5 2.0  # flux level outside of transit
 u1_3    = 0.5615 uniform 0.0 1.0  # first limb darkening parameter, not fit by model 

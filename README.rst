@@ -53,6 +53,9 @@ subtracted*. The bottom panel shows the residuals between the model and
 the *raw data*. Over-plotted on the bottom panel is the 1-sigma range of noise
 models arising from the Gaussian process.
 
+The script will also write out the data and the fit to a file, whose name
+is specified in the input.dat file.
+
 Limb-darkening is handled using a quadratic limb-darkening law. The
 utility script limbdark.py will help you find initial values for SDSS
 filters, using the tables from Claret & Bloemen (2011).

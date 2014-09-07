@@ -17,6 +17,8 @@ parser.add_argument('--bins','-b',action='store',type=int,default=0,help='number
 args = parser.parse_args()
 nbins = args.bins
 
+
+# parse input file
 input_dict = parseInput('input.dat')	
 
 nburn    = int( input_dict['nburn'] )
@@ -36,6 +38,7 @@ kernel = input_dict['kernel']
 tau = parseParam(input_dict['tau'])
 
 files = []
+output_files = []
 rp    = []
 f0    = []
 u1    = []
@@ -45,6 +48,7 @@ B     = []
 rn_amp = []
 for col in range(1,1+ncolours):
     files.append( input_dict['file_%d' % col] )
+    output_files.append( input_dict['out_%d' % col] )
     rp.append( parseParam( input_dict['rp_rs_%d' % col] ) )
     f0.append( parseParam( input_dict['f0_%d' % col] ) )
     u1.append( parseParam( input_dict['u1_%d' % col] ) )
@@ -52,6 +56,18 @@ for col in range(1,1+ncolours):
     A.append(  parseParam( input_dict['A_%d' % col] ) )
     B.append(  parseParam( input_dict['B_%d' % col] ) )
     rn_amp.append( parseParam( input_dict['rn_amp_%d' % col] ) )
+
+# OUTPUT FILE CODE
+# setup header for output file format
+outfile_header = """#This file contains the data and best fit. 
+#The first three columns are the data (x, y and y error)
+#The next column is the transit component of the best fit (including airmass term)
+#The next column is the airmass term (subtract from model and data to remove)
+#The final three columns represent the GP fit to the red noise in the residuals:
+# the first column is the mean of all the functions represented by the GP
+# the second column is the 1sigma upper limit to the functions represented by the GP
+# the third column is the 1sigma lower limit to the functions represented by the GP
+"""
 
 # create a transit model from the first band's parameters
 model = TransitModelGP(per,t0,b,rs_a,kernel,tau,rp[0],f0[0],u1[0],u2[0],A[0],B[0],rn_amp[0])
@@ -150,6 +166,13 @@ for icol in range(ncolours):
     mu = np.mean(samples,axis=0)
     std = np.std(samples,axis=0)
         
+    # write out the data before phase folding
+    with open(output_files[icol],'w') as f: 
+        f.write(outfile_header)
+        for i in range(len(xp)):
+            f.write("%f %f %f %f %f %f %f %f\n" % 
+                (xp[i]+hjdOff,yp[i],ep[i],fy[i],am[i],mu[i],mu[i]+std[i],mu[i]-std[i]) )
+    
     # remove airmass term from plots
     #fy /= am
     #yp /= am

@@ -33,6 +33,7 @@ t0 = parseParam(input_dict['t0'])
 b = parseParam(input_dict['b'])
 rs_a = parseParam(input_dict['rs_a'])
 
+output_files = []
 files = []
 rp    = []
 f0    = []
@@ -42,12 +43,21 @@ A     = []
 B     = []
 for col in range(1,1+ncolours):
     files.append( input_dict['file_%d' % col] )
+    output_files.append( input_dict['out_%d' % col] )
     rp.append( parseParam( input_dict['rp_rs_%d' % col] ) )
     f0.append( parseParam( input_dict['f0_%d' % col] ) )
     u1.append( parseParam( input_dict['u1_%d' % col] ) )
     u2.append( parseParam( input_dict['u2_%d' % col] ) )
     A.append(  parseParam( input_dict['A_%d' % col] ) )
     B.append(  parseParam( input_dict['B_%d' % col] ) )
+
+# OUTPUT FILE CODE
+# setup header for output file format
+outfile_header = """#This file contains the data and best fit. 
+#The first three columns are the data (x, y and y error)
+#The next column is the transit component of the best fit (including airmass term)
+#The final column is the airmass term (subtract from model and data to remove)
+"""
 
 # create a transit model from the first band's parameters
 model = TransitModel(per,t0,b,rs_a,rp[0],f0[0],u1[0],u2[0],A[0],B[0])
@@ -141,7 +151,14 @@ for icol in range(ncolours):
 
     fy = model.calc(icol,xp)
     am = model.calc_airmass_term(icol,xp)
-        
+
+    # write out the data before phase folding
+    with open(output_files[icol],'w') as f: 
+        f.write(outfile_header)
+        for i in range(len(xp)):
+            f.write("%f %f %f %f %f\n" % 
+                (xp[i]+hjdOff,yp[i],ep[i],fy[i],am[i]) )
+                        
     # remove airmass term from plots
     #fy /= am
     #yp /= am

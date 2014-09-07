@@ -26,3 +26,5 @@ rainbow.egg-info
 
 #example data
 example_data/chain.dat
+example_data/bestFit.pdf
+example_data/cornerPlot.pdf
