@@ -28,3 +28,4 @@ rainbow.egg-info
 example_data/chain.dat
 example_data/bestFit.pdf
 example_data/cornerPlot.pdf
+example_data/wasp12_*fit.dat
